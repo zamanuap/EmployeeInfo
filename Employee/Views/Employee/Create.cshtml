@@ -1,0 +1,84 @@
+﻿@model Employee.ViewModels.EmployeeEditViewModel
+
+@{
+    ViewBag.Title = "Employee";
+}
+<h2>Employee</h2>
+
+<form asp-controller="employee" asp-action="create" method="post">
+
+    <div class="form-horizontal">
+        <input type="hidden" asp-for="@Model.Id" />
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="row">
+
+                        <div class="form-group">
+                            <label asp-for="@Model.Name"></label>
+                            <div class="col-md-10">
+                                <input asp-for="@Model.Name" />
+                                <span asp-validation-for="@Model.Name"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label asp-for="@Model.SelectedProvinceId"></label>
+                            <div class="col-md-10">
+                                <select asp-for="@Model.SelectedProvinceId" asp-items="@Model.ProvinceNames"></select>
+                                <span asp-validation-for="@Model.ProvinceNames"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label asp-for="@Model.Telephone"></label>
+                            <div class="col-md-10">
+                                <input asp-for="@Model.Telephone" />
+                                <span asp-validation-for="@Model.Telephone"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label asp-for="@Model.PostalCode"></label>
+                            <div class="col-md-10">
+                                <input asp-for="@Model.PostalCode" />
+                                <span asp-validation-for="@Model.PostalCode"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label asp-for="@Model.Salary"></label>
+                            <div class="col-md-10">
+                                <input asp-for="@Model.Salary" />
+                                <span asp-validation-for="@Model.Salary"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+                
+            
+    </div>
+</form>
+
+
+@section Scripts{
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="~/js/NameCustomValidation.js"></script>
+    <script src="~/js/SalaryCustomValidation.js"></script>
+}

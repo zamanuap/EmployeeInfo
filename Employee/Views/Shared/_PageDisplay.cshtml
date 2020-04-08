@@ -1,0 +1,193 @@
+﻿<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+@model EmployeeDisplayViewModel
+
+@{
+    ViewData["Title"] = "ListDisplay";
+}
+
+<h1>ListDisplay</h1>
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Province)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telephone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PostalCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Salary)
+            </th>
+            <th>
+                Action
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    
+    <tbody id="recordDisplay"></tbody>
+</table>
+<div id="pageDisplay"></div>
+
+
+<script type=text/javascript>
+    var page = @ViewBag.Page;
+    var total_page;
+    
+    function showPageRecord(page_no)
+    {
+
+            $.ajax
+            ({
+            type: "POST",
+            url: "@Url.Action("Record")",
+            data: { currentPage: page_no },
+            dataType: "json",
+            success: function (records)
+                {
+                    var tableOutput = "";
+                    for (var i = 0; i < records.employeeDisplays.length; i++)
+                    {
+                        tableOutput += "<tr><td>" + records.employeeDisplays[i].name + "</td>" + "<td>" + records.employeeDisplays[i].province + "</td>" + "<td>"
+                            + records.employeeDisplays[i].telephone + "</td>" + "<td>" + records.employeeDisplays[i].postalCode
+                            + "</td>" + "<td>" + records.employeeDisplays[i].salary + "</td>" + "<td> <a href=\"/update/"
+                            + records.employeeDisplays[i].id + "\"> Update </a> | <a href=\"\/Employee\/Delete?id=" + records.employeeDisplays[i].id + "&page=" + page_no + "\">Delete </a></td></tr>";
+                    }
+                    total_page = records.totalPage;
+                    document.getElementById("recordDisplay").innerHTML = tableOutput;
+
+                    // pagination code starts
+                    var paginationctrl = "";
+
+                    if (total_page > 5)
+                    {
+                            paginationctrl += '<ul class="pagination">';
+
+                            // to show '<' link
+                            if (page_no == 1)
+                                paginationctrl += '<li class="page-item disabled"><a class="page-link">&lt;</a></li>';
+                            else
+                                paginationctrl += '<li class="page-item"><a class="page-link" onclick="showPageRecord(' + (page_no - 1) + ')">&lt;</a></li>';
+
+                            // to show page 1
+                            if (page_no == 1)
+                                paginationctrl += '<li class="page-item active"><a class="page-link" onclick="showPageRecord(' + 1 + ')">1</a></li>';
+                            else
+                                paginationctrl += '<li class="page-item"><a class="page-link" onclick="showPageRecord(' + 1 + ')">1</a></li>';
+
+                            // to show page 2,3
+                        if (page_no <= 3)
+                        {
+                                if (page_no == 2)
+                                    paginationctrl += '<li class="page-item active"><a class="page-link" onclick="showPageRecord(' + 2 + ')">2</a></li>';
+                                else
+                                    paginationctrl += '<li class="page-item"><a class="page-link" onclick="showPageRecord(' + 2 + ')">2</a></li>';
+
+                                if (page_no == 3)
+                                    paginationctrl += '<li class="page-item active"><a class="page-link" onclick="showPageRecord(' + 3 + ')">3</a></li>';
+                                else
+                                    paginationctrl += '<li class="page-item"><a class="page-link" onclick="showPageRecord(' + 3 + ')">3</a></li>';
+
+                                paginationctrl += '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                        }
+
+                            // to show two pages before last page
+                        if (page_no >= total_page - 2)
+                        {
+                            if (page_no == total_page - 2)
+                            {
+                                    paginationctrl += '<li class="page-item disabled"><a class="page-link" >...</a></li>';
+                                    paginationctrl += '<li class="page-item active"><a class="page-link" onclick="showPageRecord(' + page_no + ')">' + page_no + '</a></li>';
+                                    paginationctrl += '<li class="page-item"><a class="page-link" onclick="showPageRecord(' + (page_no + 1) + ')">' + (page_no + 1) + '</a></li>';
+                            }
+
+                            if (page_no == total_page - 1)
+                            {
+                                    paginationctrl += '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                                    paginationctrl += '<li class="page-item"><a class="page-link" onclick="showPageRecord(' + (page_no - 1) + ')">' + (page_no - 1) + '</a></li>';
+                                    paginationctrl += '<li class="page-item active"><a class="page-link" onclick="showPageRecord(' + page_no + ')">' + page_no + '</a></li>';
+                            }
+
+                            if (page_no == total_page)
+                            {
+                                    paginationctrl += '<li class="page-item disabled"><a class="page-link" >...</a></li>';
+                                    paginationctrl += '<li class="page-item"><a class="page-link" onclick="showPageRecord(' + (page_no - 2) + ')">' + (page_no - 2) + '</a></li>';
+                                    paginationctrl += '<li class="page-item"><a class="page-link" onclick="showPageRecord(' + (page_no - 1) + ')">' + (page_no - 1) + '</a></li>';
+                             }
+                        }
+                            // to show pages other than two pages before last page
+                        if (page_no > 3 && page_no < total_page - 2)
+                        {
+                                paginationctrl += '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                                paginationctrl += '<li class="page-item active"><a class="page-link" onclick="showPageRecord(' + page_no + ')">' + page_no + '</a></li>';
+                                paginationctrl += '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                        }
+
+                            // to show last page
+                            if (page_no == total_page)
+                                paginationctrl += '<li class="page-item active"><a class="page-link" onclick="showPageRecord(' + total_page + ')">' + total_page + '</a></li>';
+                            else
+                                paginationctrl += '<li class="page-item"><a class="page-link" onclick="showPageRecord(' + total_page + ')">' + total_page + '</a></li>';
+
+                            // to show '>' link
+                            if (page_no == total_page)
+                                paginationctrl += '<li class="page-item disabled"><a class="page-link">&gt;</a></li></ul>';
+                            else
+                                paginationctrl += '<li class="page-item"><a class="page-link" onclick="showPageRecord(' + (page_no + 1) + ')">&gt;</a></li></ul>';
+
+                            document.getElementById("pageDisplay").innerHTML = paginationctrl;
+                            //pageCtrl.innerHTML = paginationctrl;
+
+                    } // end of if (total_page>5)
+
+
+                    else //if (total_page<=5)
+                    {
+                            paginationctrl += '<ul class="pagination">';
+
+                            // to show '<' link
+                            if (page_no == 1)
+                                paginationctrl += '<li class="page-item disabled"><a class="page-link">&lt;</a></li>';
+                            else
+                                paginationctrl += '<li class="page-item"><a class="page-link" onclick="showPageRecord(' + (page_no - 1) + ')">&lt;</a></li>';
+
+                            // to show page 1 to 5
+                            for (var i = 1; i <= total_page; i++)
+                            {
+                            if (i == page_no)
+                                paginationctrl += '<li class="page-item active"><a class="page-link" onclick="showPageRecord(' + i + ')">' + i + '</a></li>';
+                            else
+                                paginationctrl += '<li class="page-item"><a class="page-link" onclick="showPageRecord(' + i + ')">' + i + '</a></li>';
+                            }
+
+                            // to show '>' link
+                            if (page_no == total_page)
+                                paginationctrl += '<li class="page-item disabled"><a class="page-link">&gt;</a></li></ul>';
+                            else
+                                paginationctrl += '<li class="page-item"><a class="page-link" onclick="showPageRecord(' + (page_no + 1) + ')">&gt;</a></li></ul>';
+
+                            document.getElementById("pageDisplay").innerHTML = paginationctrl;
+                
+                    } // end of pagination
+
+                }, // end of success
+            error: function (req, status, error)
+                {
+                alert(error);
+                }
+            }); // end of jquery
+        
+
+    } // end of showPageRecord()
+
+        showPageRecord(page);
+
+</script>

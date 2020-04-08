@@ -1,0 +1,81 @@
+USE [Employee_DB]
+GO
+
+/****** Object: Table [dbo].[EmployeePocos] Script Date: 3/25/2020 2:20:57 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[EmployeePocos] (
+    [Id]         UNIQUEIDENTIFIER NOT NULL,
+    [Name]       NVARCHAR (MAX)   NULL,
+    [ProvinceId] INT              NOT NULL,
+    [Telephone]  NVARCHAR (MAX)   NULL,
+    [PostalCode] NVARCHAR (MAX)   NULL,
+    [Salary]     NVARCHAR (MAX)   NULL,
+    [TimeStamp]  ROWVERSION       NULL
+);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_EmployeePocos_ProvinceId]
+    ON [dbo].[EmployeePocos]([ProvinceId] ASC);
+
+
+GO
+ALTER TABLE [dbo].[EmployeePocos]
+    ADD CONSTRAINT [PK_EmployeePocos] PRIMARY KEY CLUSTERED ([Id] ASC);
+
+
+GO
+ALTER TABLE [dbo].[EmployeePocos]
+    ADD CONSTRAINT [FK_EmployeePocos_ProvincePocos_ProvinceId] FOREIGN KEY ([ProvinceId]) REFERENCES [dbo].[ProvincePocos] ([Id]) ON DELETE CASCADE;
+
+------------------
+
+USE [Employee_DB]
+GO
+
+/****** Object: Table [dbo].[ProvincePocos] Script Date: 3/25/2020 2:22:06 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[ProvincePocos] (
+    [Id]   INT            IDENTITY (1, 1) NOT NULL,
+    [Name] NVARCHAR (MAX) NULL
+);
+
+
+---------------
+
+USE [Employee_DB]
+GO
+
+/****** Object: Table [dbo].[ProvincePocos] Script Date: 3/25/2020 2:25:34 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+INSERT INTO [dbo].[ProvincePocos] (Name) 
+VALUES ('Ontario'),
+		('Québec'),
+		('Nova Scotia'),
+		('New Brunswick'),
+		('Manitoba'),
+		('British Columbia'),
+		('Prince Edward Island'),
+		('Saskatchewan'),
+		('Alberta'),
+		('Newfoundland and Labrador'),
+		('Northwest Territories'),
+		('Yukon'),
+		('Nunavut');
+
+-------------------
