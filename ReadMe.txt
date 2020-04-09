@@ -13,8 +13,8 @@ The features of the project are
 6.It returns to the same page where the record was after deleting a record.  
 
 
-To create the database and tables
+To create and restore database 
 1.Open a new query window in SSMC and create a database uning following command
 CREATE DATABASE Employee_DB
-2.Copy the database.txt file and paste it in new query and run it.
+2.Restore Employee_DB.bak file to Employee_DB database.
 	
